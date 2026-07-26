@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mcp-tutorial:tools.schema.json",
+  "title": "MCP Tutorial Tool and Resource Contract（教学版契约，仿 UnifiedModel/api/mcp/tools.schema.json）",
+  "description": "本文件声明 lesson06 服务器承诺提供的传输、方法、工具与资源。server.py --selfcheck 会校验代码注册与本契约一致。",
+  "type": "object",
+  "required": ["transports", "mcp_methods", "tools", "resources"],
+  "properties": {
+    "transports": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["stdio", "streamable-http"] }
+    },
+    "mcp_methods": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "initialize",
+          "notifications/initialized",
+          "ping",
+          "logging/setLevel",
+          "tools/list",
+          "tools/call",
+          "resources/list",
+          "resources/templates/list",
+          "resources/read",
+          "prompts/list",
+          "prompts/get"
+        ]
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "enabled_by_default", "input_schema"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "query_metrics",
+              "query_explain",
+              "entity_write",
+              "entity_expire"
+            ]
+          },
+          "enabled_by_default": { "type": "boolean" },
+          "requires_explicit_write_enable": { "type": "boolean", "default": false },
+          "input_schema": { "type": "object", "additionalProperties": true }
+        }
+      }
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "uri_template", "read_only"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["getting-started", "workspace-overview", "workspace-schema-index"]
+          },
+          "uri_template": {
+            "type": "string",
+            "enum": [
+              "tutorial://guide/getting-started",
+              "tutorial://workspace/{workspace}/overview",
+              "tutorial://workspace/{workspace}/schema-index"
+            ]
+          },
+          "read_only": { "type": "boolean", "const": true }
+        }
+      }
+    }
+  },
+  "contract_instance": {
+    "_comment": "以下是本服务器的实际承诺清单（selfcheck 用它比对代码注册表）",
+    "transports": ["stdio", "streamable-http"],
+    "mcp_methods": [
+      "initialize", "notifications/initialized", "ping", "logging/setLevel",
+      "tools/list", "tools/call",
+      "resources/list", "resources/templates/list", "resources/read",
+      "prompts/list", "prompts/get"
+    ],
+    "tools": [
+      { "name": "query_metrics", "enabled_by_default": true },
+      { "name": "query_explain", "enabled_by_default": true },
+      { "name": "entity_write", "enabled_by_default": false, "requires_explicit_write_enable": true },
+      { "name": "entity_expire", "enabled_by_default": false, "requires_explicit_write_enable": true }
+    ],
+    "resources": [
+      { "name": "getting-started", "uri_template": "tutorial://guide/getting-started", "read_only": true },
+      { "name": "workspace-overview", "uri_template": "tutorial://workspace/{workspace}/overview", "read_only": true },
+      { "name": "workspace-schema-index", "uri_template": "tutorial://workspace/{workspace}/schema-index", "read_only": true }
+    ]
+  }
+}

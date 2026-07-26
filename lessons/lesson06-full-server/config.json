@@ -1,0 +1,29 @@
+{
+  "server": {
+    "name": "tutorial-mcp-full",
+    "version": "1.0.0"
+  },
+  "transport": {
+    "default": "stdio",
+    "http": {
+      "host": "127.0.0.1",
+      "port": 8848
+    }
+  },
+  "auth": {
+    "enabled": true,
+    "_comment": "教学演示 token。生产环境应从环境变量或密钥管理服务读取，且支持过期轮换。",
+    "tokens": [
+      { "token": "demo-token-123", "principal": "analyst", "scopes": ["read"] },
+      { "token": "demo-token-456", "principal": "operator", "scopes": ["read", "write"] },
+      { "token": "demo-token-789", "principal": "admin", "scopes": ["read", "write", "admin"] }
+    ]
+  },
+  "tools": {
+    "write_enabled": false,
+    "disabled": []
+  },
+  "logging": {
+    "level": "info"
+  }
+}
